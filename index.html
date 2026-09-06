@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 7: Online Interactions - Mastery Quiz</title>
+    <style>
+        :root {
+            --fl-red: #EE3124;
+            --fl-orange: #F37021;
+            --fl-yellow: #FFC20E;
+            --fl-green: #00A651;
+            --fl-blue: #00AEEF;
+            --fl-purple: #92278F;
+            --fl-bg: #FFF8E7;
+            --card-bg: #FFFFFF;
+            --text-dark: #2D3142;
+            --text-light: #FFFFFF;
+            --correct-bg: #E8F5E9;
+            --correct-border: #00A651;
+            --incorrect-bg: #FFEBEE;
+            --incorrect-border: #EE3124;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--fl-bg);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-bg);
+            border: 4px solid var(--fl-blue);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(0, 174, 239, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header {
+            border-bottom: 3px dashed var(--fl-yellow);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: var(--fl-red);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-tag {
+            font-size: 0.85rem;
+            background-color: var(--fl-purple);
+            color: var(--text-light);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #E2E8F0;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--fl-red), var(--fl-orange), var(--fl-yellow), var(--fl-green), var(--fl-blue), var(--fl-purple));
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #F8FAFC;
+            color: var(--text-dark);
+            border: 2px solid #E2E8F0;
+            padding: 14px 18px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--fl-orange);
+            background-color: #FFF7ED;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #1B5E20;
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #B71C1C;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .feedback.visible {
+            display: block;
+        }
+
+        .feedback.correct {
+            background-color: var(--correct-bg);
+            border: 1px solid var(--correct-border);
+            color: #1B5E20;
+        }
+
+        .feedback.incorrect {
+            background-color: var(--incorrect-bg);
+            border: 1px solid var(--incorrect-border);
+            color: #B71C1C;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background-color: var(--fl-green);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 4px 0 #007A3B;
+            transition: all 0.1s;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #007A3B;
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #007A3B;
+        }
+
+        .btn:disabled {
+            background-color: #CBD5E1;
+            box-shadow: none;
+            color: #94A3B8;
+            cursor: not-allowed;
+        }
+
+        .name-input-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .name-input-container input {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border: 2px solid var(--fl-blue);
+            border-radius: 8px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        /* Certificate Styling */
+        .certificate-container {
+            border: 10px solid var(--fl-orange);
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: inset 0 0 15px rgba(243, 112, 33, 0.2);
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .certificate-title {
+            font-size: 2rem;
+            color: var(--fl-red);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .certificate-subtitle {
+            font-size: 1.1rem;
+            color: var(--fl-purple);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .student-name {
+            font-size: 2.2rem;
+            color: var(--fl-blue);
+            font-weight: bold;
+            border-bottom: 2px solid var(--fl-yellow);
+            display: inline-block;
+            padding: 0 20px 5px 20px;
+            margin: 15px 0;
+            font-family: 'Georgia', serif;
+        }
+
+        .certificate-text {
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .certificate-footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .badge {
+            width: 80px;
+            height: 80px;
+            background-color: var(--fl-yellow);
+            color: var(--fl-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+            border: 4px dashed var(--fl-red);
+            transform: rotate(-10deg);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .container {
+                border: none;
+                box-shadow: none;
+            }
+            .controls, header, .progress-bar, #score-summary {
+                display: none !important;
+            }
+            .certificate-container {
+                border: 8px solid var(--fl-orange);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Unit 7: Online Interactions Practice</h1>
+        <span class="section-tag" id="section-tag">Question 1/30</span>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div id="quiz-screen">
+        <div class="question-card">
+            <div class="question-text" id="question-text">Loading question...</div>
+            <div class="options" id="options-container">
+                <!-- Options populated dynamically -->
+            </div>
+        </div>
+
+        <div class="feedback" id="feedback-box"></div>
+
+        <div class="controls">
+            <button class="btn" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+            <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+        </div>
+    </div>
+
+    <div id="results-screen" class="hidden">
+        <div class="name-input-container" id="name-section">
+            <h2 style="color: var(--fl-red);">Practice Complete!</h2>
+            <div id="score-summary" style="font-size: 1.3rem; font-weight: bold; margin-bottom: 15px;"></div>
+            <p id="passing-instruction">Enter your full name to generate your certificate:</p>
+            <input type="text" id="student-name-input" placeholder="Your Full Name" maxlength="40">
+            <br><br>
+            <button class="btn" onclick="generateCertificate()">Generate Certificate</button>
+        </div>
+
+        <div id="certificate-wrapper" class="hidden">
+            <div class="certificate-container">
+                <div class="certificate-title">Certificate of Achievement</div>
+                <div class="certificate-subtitle">Unit 7: Online Interactions Mastery</div>
+                <p>This is to certify that</p>
+                <div class="student-name" id="cert-display-name">Student Name</div>
+                <p class="certificate-text">
+                    has successfully demonstrated mastery of Adjective Clauses and Descriptive Phrases<br>
+                    with a passing score of <strong id="cert-score">0%</strong>.
+                </p>
+                <div class="certificate-footer">
+                    <div>
+                        <p style="margin:0; font-weight:bold; color:var(--fl-purple);">Unit 7 Grammar Guide</p>
+                        <small>Online Interactions</small>
+                    </div>
+                    <div class="badge">PASS</div>
+                    <div>
+                        <p style="margin:0; font-weight:bold;" id="cert-date">Date</p>
+                        <small>Completion Date</small>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 20px;" class="controls-cert">
+                <button class="btn" style="background-color: var(--fl-blue); box-shadow: 0 4px 0 #0081B4;" onclick="window.print()">Print Certificate</button>
+                <button class="btn" style="background-color: var(--fl-orange); box-shadow: 0 4px 0 #B8500E;" onclick="restartQuiz()">Try Again</button>
+            </div>
+        </div>
+
+        <div id="fail-wrapper" class="hidden" style="text-align: center; padding: 30px;">
+            <h2 style="color: var(--fl-red); font-size: 2rem;">Keep Practicing!</h2>
+            <div id="fail-score-summary" style="font-size: 1.4rem; font-weight: bold; margin: 20px 0;"></div>
+            <p style="font-size: 1.1rem; line-height: 1.5;">
+                You need a score of <strong>80% or higher</strong> to earn a Certificate of Achievement.<br>
+                Review the study guide rules and attempt the practice again!
+            </p>
+            <button class="btn" style="background-color: var(--fl-orange); box-shadow: 0 4px 0 #B8500E; margin-top: 20px;" onclick="restartQuiz()">Try Again</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            section: "7.2 Relative Pronoun as Subject",
+            question: "Choose the correct combination: 'We found a website. It offers free lessons.'",
+            options: [
+                "We found a website where offers free lessons.",
+                "We found a website that offers free lessons.",
+                "We found a website offers free lessons.",
+                "We found a website whose offers free lessons."
+            ],
+            correct: 1,
+            explanation: "When the relative pronoun functions as the subject of the clause, 'that' or 'which' is used for things, followed immediately by the verb ('offers')[cite: 3]."
+        },
+        {
+            section: "7.3 Relative Pronoun as Object",
+            question: "In which sentence can the relative pronoun be omitted naturally?",
+            options: [
+                "The student who works hard improves quickly.",
+                "The teacher who explains ideas clearly is helpful.",
+                "The song that we heard yesterday was catchy.",
+                "The computer that runs this program is new."
+            ],
+            correct: 2,
+            explanation: "Object relative pronouns (like 'that' in 'that we heard') can be omitted ('The song we heard...')[cite: 3]. Subject relative pronouns cannot be omitted[cite: 3]."
+        },
+        {
+            section: "7.5 Place and Time",
+            question: "Select the correct word: 'I remember the moment _____ I understood the problem.'",
+            options: [
+                "where",
+                "which",
+                "when",
+                "whose"
+            ],
+            correct: 2,
+            explanation: "'When' refers to a time ('the moment')[cite: 3]."
+        },
+        {
+            section: "7.6 Whose in Adjective Clauses",
+            question: "Correct the error: 'The student who's book I borrowed is absent.'",
+            options: [
+                "The student whose book I borrowed is absent.",
+                "The student which book I borrowed is absent.",
+                "The student whom book I borrowed is absent.",
+                "The sentence is already correct."
+            ],
+            correct: 0,
+            explanation: "'Whose' indicates possession ('whose book')[cite: 3]. 'Who's' is a contraction for 'who is' or 'who has'[cite: 3]."
+        },
+        {
+            section: "7.8 - 7.9 Essential vs. Nonessential",
+            question: "Which sentence correctly uses commas for a nonessential clause?",
+            options: [
+                "The laptop, that I bought yesterday, is already slow.",
+                "My teacher, Mr. Lopez, who loves history, recommended the book.",
+                "The students, who studied, passed the exam.",
+                "Anyone, who needs help, can ask me."
+            ],
+            correct: 1,
+            explanation: "'Mr. Lopez' specifically identifies the noun, making the adjective clause extra nonessential information that requires commas[cite: 3]."
+        },
+        {
+            section: "7.10 Descriptive Phrases",
+            question: "Rewrite using a concise descriptive phrase: 'The people who are waiting outside should come in.'",
+            options: [
+                "The people waited outside should come in.",
+                "The people waiting outside should come in.",
+                "The people who waiting outside should come in.",
+                "The people wait outside should come in."
+            ],
+            correct: 1,
+            explanation: "'who are waiting' can be shortened to the descriptive participle phrase 'waiting outside'[cite: 3]."
+        },
+        {
+            section: "7.7 Indefinite Pronouns",
+            question: "Complete the sentence: 'Everyone _____ wants to participate should sign up.'",
+            options: [
+                "which",
+                "who",
+                "where",
+                "whose"
+            ],
+            correct: 1,
+            explanation: "Adjective clauses following indefinite pronouns referring to people ('everyone') take 'who' or 'that'[cite: 3]."
+        },
+        {
+            section: "7.4 Object of Preposition",
+            question: "Choose the formal version of: 'The person who I spoke to was helpful.'",
+            options: [
+                "The person to which I spoke was helpful.",
+                "The person to who I spoke was helpful.",
+                "The person to whom I spoke was helpful.",
+                "The person whose I spoke to was helpful."
+            ],
+            correct: 2,
+            explanation: "In formal English, when a relative pronoun follows a preposition directly, 'whom' is used for people[cite: 3]."
+        },
+        {
+            section: "7.8 Nonessential Clauses",
+            question: "Identify the INCORRECT relative pronoun usage in nonessential clauses:",
+            options: [
+                "My brother, who lives in Canada, is visiting.",
+                "The app, which was updated yesterday, works well.",
+                "My car, that I bought last year, broke down.",
+                "Maria, who studied hard, passed the test."
+            ],
+            correct: 2,
+            explanation: "The relative pronoun 'that' is NOT used in nonessential (comma-delimited) adjective clauses[cite: 3]."
+        },
+        {
+            section: "7.5 Place and Time",
+            question: "Rewrite using 'where': 'This is the website on which we found the information.'",
+            options: [
+                "This is the website where we found the information.",
+                "This is the website when we found the information.",
+                "This is the website which we found the information.",
+                "This is the website that where we found information."
+            ],
+            correct: 0,
+            explanation: "'Where' replaces formal prepositional structures like 'on which' when referring to places or digital platforms[cite: 3]."
+        },
+        {
+            section: "7.2 Relative Pronoun as Subject",
+            question: "Combine: 'I know a student. She speaks three languages.'",
+            options: [
+                "I know a student which speaks three languages.",
+                "I know a student who speaks three languages.",
+                "I know a student whom speaks three languages.",
+                "I know a student where speaks three languages."
+            ],
+            correct: 1,
+            explanation: "'Who' is used as the subject relative pronoun for people[cite: 3]."
+        },
+        {
+            section: "7.3 Relative Pronoun as Object",
+            question: "Combine: 'I watched a video. My friend recommended the video.'",
+            options: [
+                "I watched a video where my friend recommended.",
+                "I watched a video whose my friend recommended.",
+                "I watched a video that my friend recommended.",
+                "I watched a video who my friend recommended."
+            ],
+            correct: 2,
+            explanation: "'That' or 'which' is used as the object relative pronoun for things[cite: 3]."
+        },
+        {
+            section: "7.3 Relative Pronoun as Object",
+            question: "Combine: 'She read the article. I sent her the article.'",
+            options: [
+                "She read the article that I sent her.",
+                "She read the article where I sent her.",
+                "She read the article who I sent her.",
+                "She read the article whose I sent her."
+            ],
+            correct: 0,
+            explanation: "'That' or 'which' connects the object of the clause describing 'article'[cite: 3]."
+        },
+        {
+            section: "7.5 Place and Time",
+            question: "Choose the correct word: 'This is the city _____ my parents grew up.'",
+            options: [
+                "when",
+                "where",
+                "which",
+                "whose"
+            ],
+            correct: 1,
+            explanation: "'Where' refers to a place ('the city')[cite: 3]."
+        },
+        {
+            section: "7.6 Whose in Adjective Clauses",
+            question: "Combine: 'I met a designer. Her website is popular.'",
+            options: [
+                "I met a designer who website is popular.",
+                "I met a designer whose website is popular.",
+                "I met a designer who's website is popular.",
+                "I met a designer which website is popular."
+            ],
+            correct: 1,
+            explanation: "'Whose' indicates possession ('her website')[cite: 3]."
+        },
+        {
+            section: "7.6 Whose in Adjective Clauses",
+            question: "Combine: 'We visited a school. Its students won the competition.'",
+            options: [
+                "We visited a school where students won the competition.",
+                "We visited a school whose students won the competition.",
+                "We visited a school which students won the competition.",
+                "We visited a school that students won the competition."
+            ],
+            correct: 1,
+            explanation: "'Whose' can be used for things/organizations to show possession ('its students')[cite: 3]."
+        },
+        {
+            section: "7.7 Indefinite Pronouns",
+            question: "Choose the correct pronoun: 'Everything _____ we discussed is important.'",
+            options: [
+                "who",
+                "where",
+                "that",
+                "whose"
+            ],
+            correct: 2,
+            explanation: "'Everything' is an indefinite pronoun representing a thing, taking 'that'[cite: 3]."
+        },
+        {
+            section: "7.7 Indefinite Pronouns",
+            question: "Choose the correct pronoun: 'Anyone _____ needs help can ask me.'",
+            options: [
+                "which",
+                "who",
+                "where",
+                "whose"
+            ],
+            correct: 1,
+            explanation: "'Anyone' refers to people, so 'who' is the appropriate relative pronoun[cite: 3]."
+        },
+        {
+            section: "7.10 Descriptive Phrases",
+            question: "Shorten to a descriptive phrase: 'The documents written by the students were displayed.'",
+            options: [
+                "This sentence is already a reduced descriptive phrase.",
+                "The documents which were written by students were displayed.",
+                "The documents that writing by students were displayed.",
+                "The documents write by students were displayed."
+            ],
+            correct: 0,
+            explanation: "'written by the students' is already a reduced past-participle descriptive phrase (reduced from 'which were written...')[cite: 3]."
+        },
+        {
+            section: "7.1 Adjective Clauses Introduction",
+            question: "What primary question does an adjective clause answer about a noun?",
+            options: [
+                "How many?",
+                "Which person/thing/place?",
+                "Why did it happen?",
+                "How often?"
+            ],
+            correct: 1,
+            explanation: "Adjective clauses describe nouns by answering 'Which person? Which thing? Which place? Which time?'[cite: 3]"
+        },
+        {
+            section: "7.2 Relative Pronoun as Subject",
+            question: "In the sentence 'The teacher who helped me was patient', what job does 'who' do inside the clause?",
+            options: [
+                "Direct Object",
+                "Subject",
+                "Possessive modifier",
+                "Object of preposition"
+            ],
+            correct: 1,
+            explanation: "'Who' is directly followed by the verb 'helped', acting as the subject of the clause[cite: 3]."
+        },
+        {
+            section: "7.3 Relative Pronoun as Object",
+            question: "In 'The article that I read was long', what grammatical job does 'that' do inside the clause?",
+            options: [
+                "Subject",
+                "Object of the verb 'read'",
+                "Possessive modifier",
+                "Adverb of place"
+            ],
+            correct: 1,
+            explanation: "'I' is the subject, 'read' is the verb, and 'that' acts as the object of 'read'[cite: 3]."
+        },
+        {
+            section: "7.4 Object of Preposition",
+            question: "In conversational everyday English, where does the preposition usually go in an adjective clause?",
+            options: [
+                "At the very beginning of the whole sentence",
+                "At the end of the adjective clause",
+                "Directly before 'who'",
+                "Prepositions are omitted completely"
+            ],
+            correct: 1,
+            explanation: "In everyday speech, the preposition typically moves to the end of the clause ('The person I spoke to...')[cite: 3]."
+        },
+        {
+            section: "7.9 Essential vs Nonessential",
+            question: "What is the primary punctuation rule for nonessential adjective clauses?",
+            options: [
+                "They must be enclosed in quotation marks.",
+                "They are set off with commas.",
+                "They require semicolons.",
+                "No punctuation is allowed."
+            ],
+            correct: 1,
+            explanation: "Nonessential clauses add extra info and must be set off with commas[cite: 3]."
+        },
+        {
+            section: "7.9 Essential vs Nonessential",
+            question: "What happens if you remove an essential adjective clause from a sentence?",
+            options: [
+                "The specific identity of the noun becomes unclear or changes the main point.",
+                "The sentence remains completely identical in clarity.",
+                "The sentence becomes grammatically illegal.",
+                "It turns into a question."
+            ],
+            correct: 0,
+            explanation: "Essential clauses identify specifically which person or thing is meant; removing them leaves the noun unidentified[cite: 3]."
+        },
+        {
+            section: "11-13 Reading Connections",
+            question: "Complete the sentence based on reading concepts: 'The Freecycle Network is an organization _____ people exchange items for free.'",
+            options: [
+                "when",
+                "where",
+                "whose",
+                "which"
+            ],
+            correct: 1,
+            explanation: "'Where' is used to refer to a place or network structure where actions occur[cite: 3]."
+        },
+        {
+            section: "7.6 Whose in Adjective Clauses",
+            question: "Which pattern correctly describes 'whose'?",
+            options: [
+                "noun + whose + verb",
+                "noun + whose + noun + verb",
+                "whose + verb + noun",
+                "noun + whose + preposition"
+            ],
+            correct: 1,
+            explanation: "'Whose' precedes the possessed noun: noun + whose + noun + verb ('The company whose website crashed...')[cite: 3]."
+        },
+        {
+            section: "7.10 Descriptive Phrases",
+            question: "Convert 'The woman who is standing by the door is my aunt' into a descriptive phrase:",
+            options: [
+                "The woman stood by the door is my aunt.",
+                "The woman standing by the door is my aunt.",
+                "The woman stand by the door is my aunt.",
+                "The woman who standing by the door is my aunt."
+            ],
+            correct: 1,
+            explanation: "Omit 'who is' to yield 'The woman standing by the door...'[cite: 3]"
+        },
+        {
+            section: "7.5 Place and Time",
+            question: "Select the equivalent formal version: 'The year in which we graduated was 2020.'",
+            options: [
+                "The year where we graduated was 2020.",
+                "The year when we graduated was 2020.",
+                "The year whose we graduated was 2020.",
+                "The year that in we graduated was 2020."
+            ],
+            correct: 1,
+            explanation: "'When' replaces 'in which' when referring to units of time[cite: 3]."
+        },
+        {
+            section: "14 Mixed Mastery Check",
+            question: "Choose the correct sentence:",
+            options: [
+                "The man that lives next door, is a doctor.",
+                "The man, who lives next door, is a doctor.",
+                "The man who lives next door is a doctor.",
+                "The man whose lives next door is a doctor."
+            ],
+            correct: 2,
+            explanation: "This is an essential clause identifying which man, requiring no commas and 'who' for the subject person[cite: 3]."
+        }
+    ];
+
+    let currentIdx = 0;
+    let selectedAnswers = new Array(questions.length).fill(null);
+
+    function loadQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('section-tag').innerText = q.section;
+        document.getElementById('question-text').innerText = `${currentIdx + 1}. ${q.question}`;
+        
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(idx);
+            
+            if (selectedAnswers[currentIdx] !== null) {
+                btn.disabled = true;
+                if (idx === q.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === selectedAnswers[currentIdx]) {
+                    btn.classList.add('incorrect');
+                }
+            }
+            optionsContainer.appendChild(btn);
+        });
+
+        const feedbackBox = document.getElementById('feedback-box');
+        if (selectedAnswers[currentIdx] !== null) {
+            const isCorrect = selectedAnswers[currentIdx] === q.correct;
+            feedbackBox.className = `feedback visible ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedbackBox.innerText = (isCorrect ? "✓ Correct! " : "✗ Incorrect. ") + q.explanation;
+            document.getElementById('next-btn').disabled = false;
+        } else {
+            feedbackBox.className = 'feedback';
+            document.getElementById('next-btn').disabled = true;
+        }
+
+        document.getElementById('prev-btn').disabled = currentIdx === 0;
+        
+        if (currentIdx === questions.length - 1 && selectedAnswers[currentIdx] !== null) {
+            document.getElementById('next-btn').innerText = "Finish";
+        } else {
+            document.getElementById('next-btn').innerText = "Next";
+        }
+
+        const progressPercent = ((currentIdx + 1) / questions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+    }
+
+    function selectOption(idx) {
+        selectedAnswers[currentIdx] = idx;
+        loadQuestion();
+    }
+
+    function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+            currentIdx++;
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIdx > 0) {
+            currentIdx--;
+            loadQuestion();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('results-screen').classList.remove('hidden');
+        
+        let score = 0;
+        selectedAnswers.forEach((ans, idx) => {
+            if (ans === questions[idx].correct) score++;
+        });
+
+        const percentage = Math.round((score / questions.length) * 100);
+        
+        if (percentage >= 80) {
+            document.getElementById('name-section').classList.remove('hidden');
+            document.getElementById('fail-wrapper').classList.add('hidden');
+            document.getElementById('score-summary').innerText = `Score: ${score} / ${questions.length} (${percentage}%)`;
+        } else {
+            document.getElementById('name-section').classList.add('hidden');
+            document.getElementById('fail-wrapper').classList.remove('hidden');
+            document.getElementById('fail-score-summary').innerText = `Score: ${score} / ${questions.length} (${percentage}%)`;
+        }
+    }
+
+    function generateCertificate() {
+        const nameInput = document.getElementById('student-name-input').value.trim();
+        if (!nameInput) {
+            alert("Please enter your name for the certificate.");
+            return;
+        }
+
+        let score = 0;
+        selectedAnswers.forEach((ans, idx) => {
+            if (ans === questions[idx].correct) score++;
+        });
+        const percentage = Math.round((score / questions.length) * 100);
+
+        document.getElementById('cert-display-name').innerText = nameInput;
+        document.getElementById('cert-score').innerText = `${percentage}%`;
+        document.getElementById('cert-date').innerText = new Date().toLocaleDateString();
+
+        document.getElementById('name-section').classList.add('hidden');
+        document.getElementById('certificate-wrapper').classList.remove('hidden');
+    }
+
+    function restartQuiz() {
+        selectedAnswers = new Array(questions.length).fill(null);
+        currentIdx = 0;
+        document.getElementById('results-screen').classList.add('hidden');
+        document.getElementById('certificate-wrapper').classList.add('hidden');
+        document.getElementById('fail-wrapper').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
